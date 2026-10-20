@@ -76,7 +76,9 @@ def salir(fila, columna, puntos):
     )
     camino.pop()
     return False
-print("Laberinto original:")
+
+
+print("LABERINTO ORIGINAL:")
 mostrar(laberinto)
 if salir(8, 0, 0):
     print("Se encontro una salida.")
