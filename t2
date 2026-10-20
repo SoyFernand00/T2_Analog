@@ -1,0 +1,102 @@
+laberinto = [
+    ['F', 1, 1, 3, 0, 1, 1, 1, 4],
+    [3, 0, 0, 1, 0, 1, 0, 0, 1],
+    [1, 1, 0, 1, 1, 1, 1, 0, 1],
+    [0, 1, 0, 1, 0, 0, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 3, 1, 1],
+    [3, 0, 1, 0, 0, 0, 1, 0, 1],
+    [1, 1, 1, 1, 3, 1, 1, 1, 1],
+    [1, 0, 0, 1, 0, 1, 0, 0, 4],
+    ['I', 1, 3, 1, 0, 1, 1, 1, 1]
+]
+camino = []
+solucion = []
+puntos_solucion = 0
+def mostrar(matriz):
+    for fila in matriz:
+        for casilla in fila:
+            print("%3s" % casilla, end=" ")
+        print()
+    print()
+
+def mostrar_camino(mensaje):
+    print(mensaje)
+    matriz = []
+    for fila in range(9):
+        nueva_fila = []
+        for columna in range(9):
+            if [fila, columna] in camino:
+                if laberinto[fila][columna] == 'I':
+                    nueva_fila.append('I')
+                elif laberinto[fila][columna] == 'F':
+                    nueva_fila.append('F')
+                else:
+                    nueva_fila.append('*')
+            else:
+                nueva_fila.append(laberinto[fila][columna])
+        matriz.append(nueva_fila)
+    mostrar(matriz)
+
+def salir(fila, columna, puntos):
+    global solucion, puntos_solucion
+    if fila < 0 or fila >= 9 or columna < 0 or columna >= 9:
+        return False
+    if laberinto[fila][columna] == 0:
+        return False
+    if [fila, columna] in camino:
+        return False
+    if laberinto[fila][columna] == 3:
+        puntos = puntos + 3
+    elif laberinto[fila][columna] == 4:
+        puntos = puntos + 4
+    camino.append([fila, columna])
+    print("Avanzando a:", fila, columna,
+          "| Puntos:", puntos)
+    if laberinto[fila][columna] == 'F':
+        if puntos >= 23:
+            solucion = camino.copy()
+            puntos_solucion = puntos
+            mostrar_camino("CAMINO CORRECTO")
+            print("Puntaje:", puntos)
+            return True
+        mostrar_camino("CAMINO INCORRECTO: no alcanza 23 puntos")
+        camino.pop()
+        return False
+    if salir(fila - 1, columna, puntos):
+        return True
+    if salir(fila, columna + 1, puntos):
+        return True
+    if salir(fila + 1, columna, puntos):
+        return True
+    if salir(fila, columna - 1, puntos):
+        return True
+    mostrar_camino(
+        "CAMINO SIN SALIDA: retrocediendo desde "
+        + str(fila) + ", " + str(columna)
+    )
+    camino.pop()
+    return False
+print("Laberinto original:")
+mostrar(laberinto)
+if salir(8, 0, 0):
+    print("Se encontro una salida.")
+    print("Puntaje total:", puntos_solucion)
+    resultado = []
+    for fila in range(9):
+        nueva_fila = []
+        for columna in range(9):
+            if [fila, columna] in solucion:
+                if laberinto[fila][columna] == 'I':
+                    nueva_fila.append('I')
+                elif laberinto[fila][columna] == 'F':
+                    nueva_fila.append('F')
+                else:
+                    nueva_fila.append('*')
+            else:
+                nueva_fila.append(laberinto[fila][columna])
+        resultado.append(nueva_fila)
+    print("Matriz con el camino encontrado:")
+    mostrar(resultado)
+    print("Puntaje total:", puntos_solucion)
+else:
+    print("No se encontro una salida con 23 puntos.")
