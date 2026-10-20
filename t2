@@ -100,5 +100,6 @@ if salir(8, 0, 0):
     print("Matriz con el camino encontrado:")
     mostrar(resultado)
     print("Puntaje total:", puntos_solucion)
+
 else:
     print("No se encontro una salida con 23 puntos.")
